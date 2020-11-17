@@ -31,7 +31,7 @@ except Exception:
 
 def send_request(counter, password, rich_results):
     payload = {"user": username, "password": password, "permission": "KO"}
-    r = requests.post(f"http://{server_ip}/iden.php", data=payload, timeout=1)
+    r = requests.post(f"http://{server_ip}/iden.php", data=payload)
     # if r.status_code != 200:
     #     die(f"Got non 200 status code: {r.status_code}\n\nResponse was: {r.content}")
     if match_string not in str(r.content):
