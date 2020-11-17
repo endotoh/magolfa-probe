@@ -23,10 +23,10 @@ print(f"Checking file: {password_filename}")
 
 try:
     fh = open(password_filename, 'r')
+    fh.close()
+
 except Exception:
     die(f"couldn't open '{password_filename}', error was: {sys.exc_info()}")
-fh.close()
-
 
 
 def send_request(counter, password, rich_results):
