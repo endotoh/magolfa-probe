@@ -30,7 +30,7 @@ except Exception:
 
 
 def send_request(counter, password, rich_results, retries=0):
-    payload = {"user": username, "password": password, "ident": "Entra"}
+    payload = {"user": username, "password": password, "iden": "Entra"}
     try:
         r = requests.post(f"http://{server_ip}/palm/palm.php", data=payload, timeout=2)
         if r.status_code != 200:
